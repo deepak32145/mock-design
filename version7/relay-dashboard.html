@@ -1,98 +1,970 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b2e28">
-  <title>Relay | Credit command center</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --ink:#15221f; --muted:#667570; --subtle:#8c9995; --line:#dce5e0; --wash:#f3f6f4;
-      --paper:#fff; --evergreen:#0b3b32; --forest:#0f5d4d; --green:#087f5b; --mint:#dff4e9;
-      --lime:#c8f06a; --blue:#e7f0ff; --blue-text:#315c9a; --amber:#fff0cf; --amber-text:#865a00;
-      --rose:#ffebe8; --rose-text:#a63e30; --shadow:0 12px 28px rgba(27,56,46,.08); --radius:18px;
-    }
-    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--wash);color:var(--ink);font:14px/1.45 Manrope,Arial,sans-serif} button,input{font:inherit} button{cursor:pointer} a{color:inherit;text-decoration:none}
-    .mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}.sr-only{position:absolute;overflow:hidden;width:1px;height:1px;clip:rect(0 0 0 0);white-space:nowrap}
-    svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-    .app{min-height:100vh;display:grid;grid-template-columns:250px minmax(0,1fr)}
-    .sidebar{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:var(--evergreen);color:#eaf7f0;padding:21px 14px 14px;z-index:10}
-    .brand{display:flex;align-items:center;gap:10px;padding:0 10px 24px;border-bottom:1px solid rgba(255,255,255,.15)}
-    .brand-mark{width:27px;height:27px;border-radius:9px;background:var(--lime);display:grid;place-items:center;color:var(--evergreen);font-weight:800;font-size:17px}.brand-name{font-size:17px;font-weight:800;letter-spacing:-.04em}.brand-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#a5c4b8;margin-left:auto}
-    .nav-label{padding:25px 10px 8px;color:#98b6aa;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.nav{display:grid;gap:3px}.nav a{display:flex;align-items:center;gap:11px;padding:10px;border-radius:10px;color:#b9d0c6;font-weight:600}.nav a:hover{background:rgba(255,255,255,.08);color:#fff}.nav a.active{color:#102e26;background:var(--lime);box-shadow:0 2px 0 rgba(0,0,0,.12)}.nav a span{flex:1}.nav .count{padding:1px 7px;border-radius:20px;background:rgba(255,255,255,.13);font-size:11px;color:inherit}.nav .active .count{background:rgba(11,59,50,.12)}
-    .sidebar-spacer{flex:1}.sidebar-card{margin:15px 3px 0;padding:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:14px}.sidebar-card p{margin:0;color:#add0c1;font-size:11px}.sidebar-card strong{display:block;margin:3px 0 9px;color:#fff;font-size:12px}.sidebar-card button{border:0;background:none;color:var(--lime);font-weight:800;padding:0;font-size:12px}.identity{display:flex;align-items:center;gap:9px;margin-top:14px;padding:12px 8px 0;border-top:1px solid rgba(255,255,255,.14)}.avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:#2c6d5c;font-size:11px;font-weight:800}.identity strong,.identity small{display:block}.identity strong{font-size:12px}.identity small{color:#9fc1b5;font-size:10px}
-    .main{min-width:0}.topbar{height:70px;background:var(--paper);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 32px;position:sticky;top:0;z-index:9}.breadcrumb{font-size:12px;font-weight:700;color:var(--muted);display:flex;gap:8px;align-items:center;white-space:nowrap}.breadcrumb span{color:#a9b4b0}.search{height:38px;width:min(430px,36vw);margin-left:auto;background:var(--wash);border:1px solid transparent;border-radius:9px;display:flex;align-items:center;gap:9px;padding:0 11px;color:var(--muted)}.search:focus-within{border-color:#80b6a3;background:#fff;box-shadow:0 0 0 3px rgba(8,127,91,.12)}.search input{min-width:0;width:100%;border:0;background:transparent;outline:none;font-size:12px}.shortcut{background:#fff;border:1px solid var(--line);border-radius:4px;color:var(--subtle);font:10px "DM Mono";padding:2px 4px}.top-icon{height:36px;width:36px;border:1px solid var(--line);display:grid;place-items:center;background:#fff;border-radius:9px;color:var(--muted);position:relative}.notification{position:absolute;top:7px;right:7px;width:6px;height:6px;background:#df5f48;border-radius:50%;border:1px solid #fff}
-    .content{width:min(1450px,100%);margin:0 auto;padding:34px 36px 56px}.eyebrow{display:flex;gap:7px;align-items:center;color:var(--green);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.eyebrow i{width:7px;height:7px;background:var(--lime);border:2px solid var(--green);border-radius:50%}.heading-row{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:7px 0 26px}.heading-row h1{margin:0;font-size:29px;line-height:1.2;letter-spacing:-1.2px}.heading-row p{margin:5px 0 0;color:var(--muted);font-size:13px}.date{color:var(--muted);font-size:12px;text-align:right}.date strong{display:block;color:var(--ink);font-size:13px}.overview{display:grid;grid-template-columns:1.35fr repeat(3,.7fr);gap:14px;margin-bottom:25px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);min-height:132px;padding:18px;box-shadow:0 2px 3px rgba(27,56,46,.02)}.metric.featured{position:relative;overflow:hidden;background:var(--evergreen);border-color:var(--evergreen);color:#fff}.metric.featured:after{content:"";position:absolute;width:178px;height:178px;border-radius:50%;border:35px solid rgba(200,240,106,.16);right:-66px;top:-72px}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.featured .metric-top{color:#b4d4c7}.metric-number{display:block;margin-top:9px;font-size:30px;font-weight:800;letter-spacing:-1.8px}.metric-number .unit{font-size:15px;letter-spacing:-.5px}.metric-sub{display:block;margin-top:2px;color:var(--muted);font-size:11px}.featured .metric-sub{color:#b4d4c7}.trend{font-size:10px;font-weight:800;border-radius:20px;padding:3px 6px;background:#e7f6ed;color:#197047}.trend.warn{background:#fff0cf;color:#986500}.featured .trend{background:rgba(200,240,106,.17);color:var(--lime)}
-    .work-grid{display:grid;grid-template-columns:minmax(460px,1.38fr) minmax(290px,.78fr);gap:20px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 2px 4px rgba(27,56,46,.02)}.card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 20px 15px}.title-group{display:flex;align-items:center;gap:10px}.icon-box{width:30px;height:30px;border-radius:9px;background:var(--mint);color:var(--forest);display:grid;place-items:center}.card h2{font-size:15px;margin:0;letter-spacing:-.35px}.card-header small{display:block;color:var(--muted);margin-top:2px;font-size:11px}.text-action{font-size:12px;color:var(--forest);font-weight:800;background:none;border:0;white-space:nowrap}.text-action:hover{text-decoration:underline}.queue{padding:0 10px 10px}.queue-item{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:11px;padding:13px 10px;border-radius:12px;transition:.15s}.queue-item:hover{background:var(--wash)}.queue-item+.queue-item{border-top:1px solid #edf1ef}.priority{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--rose);color:var(--rose-text)}.priority.normal{background:var(--blue);color:var(--blue-text)}.priority.low{background:var(--mint);color:var(--forest)}.queue-info{min-width:0}.queue-info strong{display:flex;gap:8px;align-items:center;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.queue-info p{margin:2px 0 0;color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{font-size:10px;font-weight:800;padding:4px 7px;border-radius:99px;white-space:nowrap}.status.decision{color:#986500;background:var(--amber)}.status.review{color:var(--blue-text);background:var(--blue)}.status.ready{color:#197047;background:#e3f7eb}
-    .risk-card{overflow:hidden}.deal-head{padding:18px 20px 16px;background:linear-gradient(126deg,#e7f7ed 0%,#f5fbf8 72%);border-bottom:1px solid var(--line)}.deal-head .deal-name{font-family:Newsreader,Georgia,serif;font-size:23px;line-height:1.1;letter-spacing:-.6px;margin:7px 0}.deal-head p{font-size:11px;color:var(--muted);margin:0}.health{display:flex;align-items:center;justify-content:space-between;margin-top:15px}.health span{font-size:11px;font-weight:800;color:var(--forest)}.meter{height:6px;background:#d6e5dc;border-radius:9px;flex:1;margin:0 10px;overflow:hidden}.meter i{display:block;height:100%;width:83%;background:var(--green);border-radius:9px}.summary-list{padding:4px 20px 13px}.summary-line{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #edf1ef;font-size:12px}.summary-line:last-child{border:0}.summary-line span{color:var(--muted)}.summary-line strong{font-size:12px}.signal{display:flex;align-items:center;gap:6px;color:#197047!important;font-weight:800}.signal:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.analytics{display:grid;grid-template-columns:1.38fr .78fr;gap:20px;margin-top:20px}.pipeline{padding-bottom:16px}.chart{padding:5px 20px 0;height:154px;display:flex;align-items:end;gap:11px;border-bottom:1px solid #edf1ef}.bar{height:var(--h);flex:1;min-width:20px;border-radius:7px 7px 2px 2px;background:#cae7d8;position:relative;transition:.2s}.bar.active{background:var(--green)}.bar:before{content:attr(data-value);position:absolute;top:-19px;left:50%;transform:translateX(-50%);font:10px "DM Mono";color:var(--muted)}.bar:hover{filter:brightness(.9);transform:translateY(-2px)}.chart-labels{padding:7px 20px 0;display:flex;gap:11px}.chart-labels span{flex:1;text-align:center;color:var(--muted);font-size:9px}.tasks{padding:0 20px 18px}.task{display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #edf1ef;font-size:11px}.task:last-child{border:0}.check{width:17px;height:17px;border-radius:5px;border:1.5px solid #b8c9c1;flex:none;margin-top:1px}.task.complete .check{background:var(--green);border-color:var(--green);position:relative}.task.complete .check:after{content:"✓";position:absolute;color:#fff;font-size:11px;left:3px;top:-1px}.task span{color:var(--muted);margin-left:auto;white-space:nowrap}.task strong{font-weight:600}.task.complete strong{text-decoration:line-through;color:var(--muted)}
-    .process{margin-top:20px;padding:17px 20px}.process-top{display:flex;align-items:center;justify-content:space-between}.process-top h2{margin:0;font-size:14px}.stages{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:18px;position:relative}.stages:before{content:"";position:absolute;left:8%;right:8%;top:14px;height:2px;background:#d9e5df}.stage{position:relative;text-align:center;z-index:1}.dot{width:29px;height:29px;margin:auto;background:#fff;border:2px solid #cfdcd5;border-radius:50%;display:grid;place-items:center;color:#8d9d96;font-size:11px;font-weight:800}.stage.done .dot{background:var(--green);border-color:var(--green);color:#fff}.stage.current .dot{background:var(--lime);border-color:var(--evergreen);color:var(--evergreen);box-shadow:0 0 0 4px #e7f5ed}.stage p{margin:7px 0 0;font-size:10px;font-weight:800;color:var(--muted)}.stage.current p{color:var(--forest)}
-    .floating{position:fixed;right:25px;bottom:24px;border:0;border-radius:50%;height:48px;width:48px;background:var(--evergreen);color:#fff;box-shadow:0 8px 22px rgba(11,59,50,.3);display:grid;place-items:center;z-index:5}.floating:hover{background:var(--forest);transform:translateY(-2px)}.toast{position:fixed;bottom:81px;right:24px;background:#18251f;color:#fff;border-radius:10px;padding:10px 13px;font-size:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(6px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
-    @media(max-width:1060px){.app{grid-template-columns:74px minmax(0,1fr)}.sidebar{padding:18px 10px}.brand{justify-content:center;padding:0 0 22px}.brand-name,.brand-label,.nav-label,.nav a span,.nav .count,.sidebar-card,.identity>div{display:none}.nav{gap:7px}.nav a{justify-content:center;padding:11px}.identity{justify-content:center;padding-top:14px}.overview{grid-template-columns:1.2fr repeat(3,.8fr)}.content{padding:28px 24px}.topbar{padding:0 24px}}
-    @media(max-width:760px){.app{display:block}.sidebar{height:auto;position:relative;display:flex;flex-direction:row;align-items:center;padding:10px 14px}.brand{border:0;padding:0}.nav-label,.nav a:not(.active),.identity{display:none}.nav{margin-left:auto}.nav a{padding:8px}.sidebar-spacer{display:none}.topbar{height:60px;padding:0 16px}.breadcrumb{display:none}.search{margin-left:0;width:auto;flex:1}.content{padding:22px 16px 40px}.heading-row{display:block;margin-bottom:18px}.date{display:none}.overview{grid-template-columns:repeat(2,1fr);gap:9px}.metric{min-height:110px;padding:14px}.metric.featured{grid-column:span 2}.work-grid,.analytics{grid-template-columns:1fr;gap:14px}.queue-item{grid-template-columns:30px minmax(0,1fr)}.queue-item .status{grid-column:2;justify-self:start}.stages{overflow-x:auto;grid-template-columns:repeat(5,108px);justify-content:start}.stages:before{left:42px;right:auto;width:430px}.process{overflow:hidden}.top-icon{display:none}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b3b32">
+<title>Relay | Application #861070</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#122420; --muted:#5c6d67; --line:#e1e8e3; --line-soft:#edf2ee;
+  --wash:#f4f7f5; --paper:#fff;
+  --evergreen:#09332a; --evergreen-2:#114c3d; --forest:#0e6650; --green:#0a8f66;
+  --mint:#e3f6ea; --mint-2:#d2efdd; --lime:#c7f279;
+  --blue:#eaf1ff; --blue-text:#3660a6;
+  --amber:#fff3d9; --amber-text:#8a5c00;
+  --rose:#fdeceb; --rose-text:#b23f30;
+  --shadow-sm:0 1px 2px rgba(13,36,29,.05), 0 1px 1px rgba(13,36,29,.04);
+  --shadow:0 20px 44px -18px rgba(9,41,32,.28), 0 2px 10px rgba(9,41,32,.06);
+  --shadow-lg:0 30px 60px -20px rgba(9,41,32,.32), 0 4px 16px rgba(9,41,32,.08);
+  --radius:18px; --radius-sm:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+  radial-gradient(1100px 520px at 10% -10%, rgba(199,242,121,.10), transparent 60%),
+  radial-gradient(900px 480px at 100% 0%, rgba(10,143,102,.07), transparent 55%),
+  var(--wash);
+  color:var(--ink);font:13px/1.5 Manrope,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mono{font-family:"DM Mono",monospace;font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.top{height:64px;background:linear-gradient(130deg,var(--evergreen),var(--evergreen-2) 130%);display:flex;align-items:center;gap:20px;padding:0 30px;color:#edf8f2;position:sticky;top:0;z-index:30;border-bottom:1px solid rgba(199,242,121,.18);box-shadow:0 18px 34px -22px rgba(4,20,16,.6)}
+.brand{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:800;letter-spacing:-.04em}
+.mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--lime),#9fe066);color:var(--evergreen);display:grid;place-items:center;font-size:16px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.brand small{color:#a9c8bd;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-left:4px}
+.top a:not(.brand){display:flex;align-items:center;gap:6px;color:#b7d0c5;font-size:11px;font-weight:800;transition:color .15s ease}
+.top a:not(.brand):hover{color:#fff}
+.top-spacer{flex:1}
+.search{height:34px;width:245px;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:0 9px;color:#bad2c9;transition:border-color .15s ease,background .15s ease}
+.search:focus-within{background:rgba(255,255,255,.14);border-color:rgba(199,242,121,.45)}
+.search input{width:100%;min-width:0;background:transparent;border:0;outline:0;color:#fff;font-size:11px}
+.search input::placeholder{color:#b0c8be}
+.user{display:flex;gap:8px;align-items:center}
+.avatar{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#2c6c5c,#1c4f42);font-size:10px;font-weight:800;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.user b,.user span{display:block;line-height:1.15}
+.user b{font-size:11px}
+.user span{font-size:9px;color:#a7c7bb}
+
+.casebar{background:#fff;border-bottom:1px solid var(--line);padding:16px 30px 0;position:sticky;top:64px;z-index:20}
+.case-inner,.content{max-width:1430px;margin:auto}
+.crumb{display:flex;gap:7px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.crumb span{color:#a9b6b1}
+.case-row{display:flex;align-items:center;gap:15px;padding:8px 0 15px}
+.case-title{min-width:0;flex:1}
+.case-title h1{font:600 29px/1.08 Newsreader,Georgia,serif;letter-spacing:-.8px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#0e1f1a}
+.case-title p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.tags{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.tag{border-radius:999px;padding:5px 10px;font-size:10px;font-weight:800;white-space:nowrap;border:1px solid transparent}
+.tag.green{background:#e3f7ea;color:#146a45;border-color:#c7e9d4}
+.tag.blue{background:var(--blue);color:var(--blue-text);border-color:#d7e4fb}
+.tag.mint{background:var(--mint);color:var(--forest);border-color:#cdeadb}
+.tabs{display:flex;gap:22px;overflow:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;border-bottom:2.5px solid transparent;background:transparent;color:var(--muted);font-size:11px;font-weight:800;padding:10px 1px;white-space:nowrap;transition:color .15s ease,border-color .15s ease}
+.tab.active{color:var(--forest);border-color:var(--green)}
+.tab:hover{color:var(--ink)}
+
+.content{padding:24px 30px 72px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+.overview{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;box-shadow:var(--shadow-sm)}
+.metric{padding:15px 17px;border-right:1px solid var(--line);position:relative}
+.metric:last-child{border:0}
+.metric label,.k{display:block;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.metric b{display:block;margin-top:5px;font-size:17px;letter-spacing:-.5px}
+.metric p{margin:3px 0 0;color:var(--muted);font-size:10px}
+.metric.emphasis{background:linear-gradient(135deg,#eafbf1,#fff)}
+.metric.emphasis::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--green),var(--lime))}
+.metric.emphasis b{color:#146a45;font-size:21px}
+.body-grid{display:grid;grid-template-columns:minmax(0,1.33fr) minmax(290px,.67fr);gap:18px;margin-top:18px}
+.section{padding:19px}
+.section+.section{border-top:1px solid var(--line)}
+.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.title{display:flex;align-items:center;gap:9px}
+.icon{height:30px;width:30px;border-radius:9px;background:var(--mint);color:var(--forest);display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(14,102,80,.1)}
+.icon svg{width:16px}
+.section h2{font-size:14.5px;margin:0;letter-spacing:-.3px}
+.section p{color:var(--muted);font-size:10.5px;margin:2px 0 0}
+.action{border:0;background:none;color:var(--forest);font-size:10.5px;font-weight:800;padding:0;white-space:nowrap}
+.action:hover{text-decoration:underline}
+.product{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:12px;transition:box-shadow .15s ease,border-color .15s ease,transform .15s ease}
+.product+.product{margin-top:8px}
+a.product:hover{border-color:#c9dcd2;box-shadow:0 10px 22px -14px rgba(9,41,32,.25);transform:translateY(-1px)}
+.product-icon{width:29px;height:29px;display:grid;place-items:center;border-radius:8px;background:var(--amber);color:var(--amber-text)}
+.product-icon.ok{background:var(--mint);color:var(--forest)}
+.product strong{display:block;font-size:11.5px}
+.product p{margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{font-size:10px;font-weight:800;padding:4px 8px;border-radius:20px;white-space:nowrap}
+.pill.pending{background:var(--amber);color:var(--amber-text)}
+.pill.approved{background:#e3f7ea;color:#146a45}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quick{border:1px solid var(--line);border-radius:12px;padding:12px;transition:box-shadow .15s ease,border-color .15s ease}
+.quick:hover{box-shadow:var(--shadow-sm);border-color:#d4e2dc}
+.quick h3{margin:0;font-size:11px}
+.quick ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:5px}
+.quick li{display:flex;justify-content:space-between;gap:8px;font-size:10.5px}
+.quick li span{color:var(--muted)}
+.quick li b{font-size:10.5px}
+.split{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat-card{border:1px solid var(--line);border-radius:12px;padding:12px;transition:box-shadow .15s ease,border-color .15s ease}
+.stat-card:hover{box-shadow:var(--shadow-sm);border-color:#d4e2dc}
+.stat-card h3{font-size:11px;margin:0}
+.stat-card p{margin:4px 0 0}
+.stat-card strong{font-size:13.5px;display:block;margin-top:6px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-sm)}
+.table{width:100%;border-collapse:collapse;min-width:580px;font-size:10.5px}
+.table th{text-align:left;color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:10px 11px;background:#fafcfb}
+.table td{padding:10px 11px;border-top:1px solid #edf1ef;vertical-align:top}
+.table tbody tr:hover{background:#fafcfa}
+.table th:last-child,.table td:last-child{text-align:right}
+.none{color:var(--muted);text-align:center!important;padding:15px!important}
+.side{display:grid;align-content:start;gap:16px}
+.side-panel{padding:17px}
+.decision{background:linear-gradient(160deg,#eefbf3 0%,#fff 65%);border-color:#cde9da;box-shadow:var(--shadow);border-left:4px solid var(--green)}
+.eyebrow{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+.eyebrow i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lime);border:1px solid var(--green);margin-right:5px;box-shadow:0 0 0 3px rgba(199,242,121,.25)}
+.decision h2{font:600 23px/1.1 Newsreader,Georgia,serif;letter-spacing:-.6px;margin:8px 0 3px;color:#135a3e}
+.decision p{margin:0;color:var(--muted);font-size:10.5px}
+.lines{margin:14px 0;border-top:1px solid #dcebe1;border-bottom:1px solid #dcebe1}
+.line{display:flex;justify-content:space-between;padding:9px 0;font-size:10.5px;gap:8px}
+.line span{color:var(--muted)}
+.line b{font-size:10.5px;text-align:right}
+.btn{width:100%;height:38px;border:0;border-radius:9px;background:linear-gradient(135deg,var(--evergreen),var(--evergreen-2));color:#fff;font-size:11px;font-weight:800;box-shadow:0 12px 22px -12px rgba(9,41,32,.5);transition:transform .12s ease,box-shadow .12s ease,background .12s ease}
+.btn:hover{background:linear-gradient(135deg,var(--forest),#13785f);transform:translateY(-1px);box-shadow:0 16px 28px -12px rgba(9,41,32,.55)}
+.btn:active{transform:translateY(0)}
+.side-list{list-style:none;padding:0;margin:0}
+.side-list li{display:grid;grid-template-columns:20px 1fr auto;gap:7px;align-items:center;border-top:1px solid #edf1ef;padding:9px 0;font-size:10.5px;transition:color .15s ease}
+.side-list li:hover{color:var(--forest)}
+.side-list li:first-child{border:0}
+.side-list i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.side-list li:nth-child(2) i{background:#4f8cc9}
+.side-list li:nth-child(3) i{background:#c5901e}
+.side-list span{color:var(--muted)}
+.side-list b{font-size:10.5px}
+.subpanel{display:none}
+.subpanel.active{display:block}
+.record{margin-top:16px}
+.record:first-child{margin-top:0}
+.record-head{display:flex;justify-content:space-between;align-items:start;gap:12px;background:linear-gradient(135deg,#eff9f4,#fff);border:1px solid var(--line);border-radius:14px 14px 0 0;padding:15px 17px}
+.record-head h2{font:600 21px/1.05 Newsreader,Georgia,serif;letter-spacing:-.55px;margin:0;color:#0e1f1a}
+.record-head p{margin:3px 0 0;color:var(--muted);font-size:10.5px}
+.record-body{padding:16px;border:1px solid var(--line);border-top:0;background:#fff;border-radius:0 0 14px 14px}
+.fact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:15px}
+.fact{border:1px solid var(--line);border-radius:10px;padding:10px}
+.fact b{display:block;margin-top:3px;font-size:10.5px;word-break:break-word}
+.subhead{display:flex;justify-content:space-between;align-items:center;margin:16px 0 8px}
+.subhead:first-child{margin-top:0}
+.subhead h3{font-size:11px;margin:0}
+.subhead .action{font-size:10px}
+.toast{position:fixed;right:22px;bottom:22px;background:#132019;color:#fff;border-radius:10px;padding:10px 13px;font-size:12px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s;z-index:50}
+.toast.show{opacity:1;transform:none}
+@media(max-width:1000px){.body-grid{grid-template-columns:1fr}.side{grid-template-columns:repeat(2,1fr)}.overview{grid-template-columns:repeat(2,1fr)}.metric:nth-child(2){border-right:0}.metric:nth-child(-n+2){border-bottom:1px solid var(--line)}.casebar,.content{padding-left:22px;padding-right:22px}}@media(max-width:680px){.top{height:55px;padding:0 15px}.top a:not(.brand),.search,.user>div{display:none}.top-spacer{display:block}.casebar{position:static;padding:13px 15px 0}.case-title h1{font-size:22px}.tags{display:none}.content{padding:15px 14px 55px}.side{grid-template-columns:1fr}.overview{grid-template-columns:1fr 1fr}.body-grid{gap:14px}.quick-grid,.split{grid-template-columns:1fr}.fact-grid{grid-template-columns:1fr 1fr}.section{padding:15px}.tabs{gap:17px}}
+</style>
 </head>
 <body>
-  <svg class="sr-only" aria-hidden="true"><symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol><symbol id="i-case" viewBox="0 0 24 24"><path d="M4 7h16v12H4z"/><path d="M9 7V5h6v2M4 12h16"/></symbol><symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol><symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h4"/></symbol><symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 11c2.2 0 4-1.8 4-4s-1.8-4-4-4M16 14c2.8 0 5 2.2 5 5"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.1 2.1-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-3v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1L6.6 17l.1-.1A1.7 1.7 0 0 0 7 15a1.7 1.7 0 0 0-1.5-1H5.3v-3h.2A1.7 1.7 0 0 0 7 10a1.7 1.7 0 0 0-.3-1.9l-.1-.1 2.1-2.1.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h3v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 8l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2v3h-.2a1.7 1.7 0 0 0-1.5 1z"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.3 1.7c-1.3 1.1-1.8 1.5-1.8 3.3M12 17h.01"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol><symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4zM12 9v4M12 17h.01"/></symbol></svg>
-  <div class="app">
-    <aside class="sidebar">
-      <a class="brand" href="#"><span class="brand-mark">c</span><span class="brand-name">citizens</span><span class="brand-label">Relay</span></a>
-      <div class="nav-label">Workspace</div>
-      <nav class="nav" aria-label="Primary navigation">
-        <a class="active" href="#"><svg><use href="#i-grid"/></svg><span>Command center</span></a>
-        <a href="#queue"><svg><use href="#i-case"/></svg><span>My work</span><b class="count">8</b></a>
-        <a href="#pipeline"><svg><use href="#i-chart"/></svg><span>Pipeline</span></a>
-        <a href="#"><svg><use href="#i-file"/></svg><span>Documents</span></a>
-        <a href="#"><svg><use href="#i-users"/></svg><span>Customers</span></a>
-      </nav>
-      <div class="nav-label">Manage</div>
-      <nav class="nav"><a href="#"><svg><use href="#i-settings"/></svg><span>Preferences</span></a></nav>
-      <div class="sidebar-spacer"></div>
-      <section class="sidebar-card"><p>Your team is on track</p><strong>92% of decisions within SLA</strong><button type="button" onclick="showToast('Team performance opened')">View performance <span>→</span></button></section>
-      <div class="identity"><div class="avatar">JW</div><div><strong>Jordan Williams</strong><small>Commercial Underwriter</small></div></div>
-    </aside>
-    <main class="main">
-      <header class="topbar">
-        <div class="breadcrumb">Commercial Lending <span>/</span> Overview</div>
-        <label class="search"><svg><use href="#i-search"/></svg><span class="sr-only">Search cases or customers</span><input placeholder="Search cases, customers, or documents"><kbd class="shortcut">⌘ K</kbd></label>
-        <button class="top-icon" type="button" aria-label="Notifications" onclick="showToast('You have 2 new notifications')"><svg><use href="#i-bell"/></svg><i class="notification"></i></button>
-        <button class="top-icon" type="button" aria-label="Help" onclick="showToast('Relay assistant is ready')"><svg><use href="#i-help"/></svg></button>
-      </header>
-      <div class="content">
-        <div class="eyebrow"><i></i> Tuesday focus</div>
-        <div class="heading-row"><div><h1>Good morning, Jordan.</h1><p>Here’s the clearest path through today’s credit work.</p></div><div class="date"><strong>October 6, 2026</strong>9:24 AM ET</div></div>
-        <section class="overview" aria-label="Portfolio overview">
-          <article class="metric featured"><div class="metric-top">Priority decisions <span class="trend">4 require action</span></div><strong class="metric-number">08</strong><span class="metric-sub">2 new since yesterday</span></article>
-          <article class="metric"><div class="metric-top">In review <span class="trend">+3</span></div><strong class="metric-number">17</strong><span class="metric-sub">$6.4M total exposure</span></article>
-          <article class="metric"><div class="metric-top">SLA at risk <span class="trend warn">48h</span></div><strong class="metric-number">02</strong><span class="metric-sub">Escalate before Thursday</span></article>
-          <article class="metric"><div class="metric-top">Approved this month</div><strong class="metric-number">$12.8<span class="unit">M</span></strong><span class="metric-sub">18 decisions completed</span></article>
-        </section>
-        <div class="work-grid">
-          <section id="queue" class="card" aria-labelledby="queue-title">
-            <header class="card-header"><div class="title-group"><span class="icon-box"><svg><use href="#i-case"/></svg></span><div><h2 id="queue-title">Your priority queue</h2><small>Ranked by impact, urgency, and decision readiness</small></div></div><button class="text-action" type="button" onclick="showToast('All 8 cases opened')">View all 8 <span>→</span></button></header>
-            <div class="queue">
-              <a class="queue-item" href="relay-decision-workspace.html"><span class="priority"><svg><use href="#i-alert"/></svg></span><span class="queue-info"><strong>T&amp;C 4 Portsmouth Avenue Holding LLC</strong><p class="mono">#861070 · $584,400 · Real estate purchase</p></span><b class="status decision">Decision needed</b></a>
-              <a class="queue-item" href="#"><span class="priority"><svg><use href="#i-alert"/></svg></span><span class="queue-info"><strong>Redfield Industrial Group</strong><p class="mono">#861042 · $1,200,000 · Equipment term loan</p></span><b class="status decision">Due today</b></a>
-              <a class="queue-item" href="#"><span class="priority normal"><svg><use href="#i-file"/></svg></span><span class="queue-info"><strong>Coral &amp; Stone Hospitality</strong><p class="mono">#860994 · $780,000 · Business line of credit</p></span><b class="status review">Financials ready</b></a>
-              <a class="queue-item" href="#"><span class="priority low"><svg><use href="#i-users"/></svg></span><span class="queue-info"><strong>Stewart Family Dental PLLC</strong><p class="mono">#860988 · $425,000 · Practice acquisition</p></span><b class="status ready">Ready to close</b></a>
-            </div>
-          </section>
-          <aside class="card risk-card" aria-labelledby="deal-title">
-            <div class="deal-head"><div class="eyebrow">Continue where you left off</div><h2 id="deal-title" class="deal-name">T&amp;C 4 Portsmouth Avenue</h2><p class="mono">Application #861070 · Streamline</p><div class="health"><span>Decision readiness</span><div class="meter"><i></i></div><strong>83%</strong></div></div>
-            <div class="summary-list"><div class="summary-line"><span>Recommended decision</span><strong class="signal">Approve</strong></div><div class="summary-line"><span>Approved amount</span><strong class="mono">$584,400</strong></div><div class="summary-line"><span>Open evidence</span><strong>1 item</strong></div><div class="summary-line"><span>Next best action</span><a class="text-action" href="relay-decision-workspace.html">Review decision →</a></div></div>
-          </aside>
-        </div>
-        <div class="analytics">
-          <section id="pipeline" class="card pipeline" aria-labelledby="pipeline-title"><header class="card-header"><div class="title-group"><span class="icon-box"><svg><use href="#i-chart"/></svg></span><div><h2 id="pipeline-title">Pipeline momentum</h2><small>Cases entering your queue over the last 7 days</small></div></div><button class="text-action" type="button" onclick="showToast('Pipeline report downloaded')">Export</button></header><div class="chart" aria-label="Bar chart: 5, 8, 4, 11, 9, 6, 12 cases"><i class="bar" style="--h:39%" data-value="5"></i><i class="bar" style="--h:62%" data-value="8"></i><i class="bar" style="--h:31%" data-value="4"></i><i class="bar" style="--h:86%" data-value="11"></i><i class="bar" style="--h:70%" data-value="9"></i><i class="bar" style="--h:47%" data-value="6"></i><i class="bar active" style="--h:94%" data-value="12"></i></div><div class="chart-labels"><span>Sep 30</span><span>Oct 1</span><span>Oct 2</span><span>Oct 3</span><span>Oct 4</span><span>Oct 5</span><span>Today</span></div></section>
-          <section class="card" aria-labelledby="tasks-title"><header class="card-header"><div><h2 id="tasks-title">Today’s checklist</h2><small>Keep the decision moving</small></div><span class="mono" style="font-size:11px;color:var(--muted)">2 / 4</span></header><div class="tasks"><div class="task complete"><i class="check"></i><strong>Review cash flow analysis</strong><span>Done</span></div><div class="task complete"><i class="check"></i><strong>Validate collateral value</strong><span>Done</span></div><div class="task"><i class="check"></i><strong>Confirm policy exception rationale</strong><span>11:00 AM</span></div><div class="task"><i class="check"></i><strong>Publish T&amp;C 4 decision</strong><span>Today</span></div></div></section>
-        </div>
-        <section class="card process" aria-labelledby="process-title"><div class="process-top"><h2 id="process-title">Application #861070 · decision journey</h2><a class="text-action" href="relay-decision-workspace.html">Open workspace →</a></div><div class="stages"><div class="stage done"><div class="dot">✓</div><p>Intake</p></div><div class="stage done"><div class="dot">✓</div><p>Analysis</p></div><div class="stage current"><div class="dot">3</div><p>Decision</p></div><div class="stage"><div class="dot">4</div><p>Documentation</p></div><div class="stage"><div class="dot">5</div><p>Booking</p></div></div></section>
-      </div>
-    </main>
-  </div>
-  <button class="floating" aria-label="Open Relay assistant" type="button" onclick="showToast('How can I help with this application?')"><svg><use href="#i-help"/></svg></button><div class="toast" id="toast" role="status"></div>
-  <script>let toastTimer;function showToast(message){const toast=document.getElementById('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2600)}document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.querySelector('.search input').focus()}})</script>
+<svg class="sr" aria-hidden="true">
+<symbol id="home" viewBox="0 0 24 24">
+<path d="m3 11 9-8 9 8v10H3z"/>
+<path d="M9 21v-6h6v6"/>
+</symbol>
+<symbol id="search" viewBox="0 0 24 24">
+<circle cx="11" cy="11" r="6"/>
+<path d="m16 16 4 4"/>
+</symbol>
+<symbol id="box" viewBox="0 0 24 24">
+<path d="M4 7h16v12H4zM9 7V5h6v2M4 12h16"/>
+</symbol>
+<symbol id="flag" viewBox="0 0 24 24">
+<path d="M5 21V4M5 5c4-3 7 3 14 0v10c-7 3-10-3-14 0"/>
+</symbol>
+<symbol id="file" viewBox="0 0 24 24">
+<path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h4"/>
+</symbol>
+<symbol id="user" viewBox="0 0 24 24">
+<circle cx="12" cy="8" r="4"/>
+<path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+</symbol>
+<symbol id="alert" viewBox="0 0 24 24">
+<path d="M12 3 2.8 20h18.4zM12 9v4M12 17h.01"/>
+</symbol>
+<symbol id="check" viewBox="0 0 24 24">
+<path d="m5 12 4 4L19 6"/>
+</symbol>
+</svg>
+<header class="top">
+<a class="brand" href="#">
+<span class="mark">c</span>citizens <small>Relay</small>
+</a>
+<a href="#">
+<svg>
+<use href="#home"/>
+</svg>My applications</a>
+<div class="top-spacer">
+</div>
+<label class="search">
+<svg>
+<use href="#search"/>
+</svg>
+<span class="sr">Search</span>
+<input placeholder="Search Relay">
+</label>
+<div class="user">
+<span class="avatar">UW</span>
+<div>
+<b>uwtltst</b>
+<span>Underwriter</span>
+</div>
+</div>
+</header>
+<header class="casebar">
+<div class="case-inner">
+<div class="crumb">My applications <span>/</span> Application summary <span>/</span> <b class="mono">#861070</b>
+</div>
+<div class="case-row">
+<div class="case-title">
+<h1>T&amp;C 4 Portsmouth Avenue Holding LLC</h1>
+<p class="mono">Application #861070 · Application date 09/08/2026 · Relationship Flag 7 · MGS 20</p>
+</div>
+<div class="tags">
+<span class="tag green">Closing Approved</span>
+<span class="tag blue">Streamline</span>
+<span class="tag mint">Non-Restricted</span>
+</div>
+</div>
+<nav class="tabs" aria-label="Application content">
+<button class="tab active" data-panel="summary">Summary &amp; actions</button>
+<button class="tab" data-panel="customers">Customer 360</button>
+<a class="tab" href="relay-decision-workspace.html">Decision workspace →</a>
+</nav>
+</div>
+</header>
+<main class="content">
+<section id="summary" class="subpanel active">
+<div class="overview">
+<article class="metric emphasis">
+<label>Total commitment</label>
+<b class="mono">$907,400.00</b>
+<p>Application #861070</p>
+</article>
+<article class="metric">
+<label>Application date</label>
+<b class="mono">09/08/2026</b>
+<p>Retail underwriting policy</p>
+</article>
+<article class="metric">
+<label>Deal category</label>
+<b>Streamline</b>
+<p>Expected: Streamline</p>
+</article>
+<article class="metric">
+<label>RAC</label>
+<b>Non-Restricted</b>
+<p>Relationship flag 7</p>
+</article>
+</div>
+<div class="body-grid">
+<div>
+<section class="panel">
+<div class="section">
+<header class="section-head">
+<div class="title">
+<span class="icon">
+<svg>
+<use href="#alert"/>
+</svg>
+</span>
+<div>
+<h2>Credit action required · New Money Products</h2>
+<p>Two products on the application.</p>
+</div>
+</div>
+<button class="action" type="button" onclick="notify('New money products opened')">Manage products</button>
+</header>
+<a class="product" href="relay-decision-workspace.html">
+<span class="product-icon">
+<svg>
+<use href="#alert"/>
+</svg>
+</span>
+<span>
+<strong>RE – Small Business Mortgage</strong>
+<p class="mono">RELAY · $584,400.00 · Speciality Type — · Cash Secured N</p>
+</span>
+<b class="pill pending">Pending</b>
+</a>
+<div class="product">
+<span class="product-icon ok">
+<svg>
+<use href="#check"/>
+</svg>
+</span>
+<span>
+<strong>Line of Credit (Uncommitted)</strong>
+<p class="mono">RELAY · $100,000.00 · Speciality Type — · Cash Secured N</p>
+</span>
+<b class="pill approved">Closing Approved</b>
+</div>
+</div>
+<div class="section">
+<header class="section-head">
+<div class="title">
+<span class="icon">
+<svg>
+<use href="#flag"/>
+</svg>
+</span>
+<div>
+<h2>Application controls</h2>
+<p>Policy, flags, reports, stipulations, and exceptions.</p>
+</div>
+</div>
+</header>
+<div class="quick-grid">
+<article class="quick">
+<h3>Underwriting Policy</h3>
+<ul>
+<li>
+<span>Underwriting Policy</span>
+<b>Retail</b>
+</li>
+<li>
+<span>Deal Category</span>
+<b>Streamline</b>
+</li>
+<li>
+<span>Expected Deal Category</span>
+<b>Streamline</b>
+</li>
+</ul>
+</article>
+<article class="quick">
+<h3>App Flags</h3>
+<ul>
+<li>
+<span>CRA / Reg O / Reg W</span>
+<b>No / No / No</b>
+</li>
+<li>
+<span>Bureau Fraud / Red Flag</span>
+<b>No / No</b>
+</li>
+<li>
+<span>Bank Acquired Type</span>
+<b>—</b>
+</li>
+<li>
+<span>Has SBA Product</span>
+<b>No</b>
+</li>
+<li>
+<span>SBA Program Eligible</span>
+<b>No</b>
+</li>
+<li>
+<span>SBA Participated</span>
+<b>No</b>
+</li>
+<li>
+<span>Has Fundation Product</span>
+<b>No</b>
+</li>
+<li>
+<span>Has Ebay Loan</span>
+<b>No</b>
+</li>
+</ul>
+</article>
+<article class="quick">
+<h3>Reports</h3>
+<ul>
+<li>
+<span>Commercial Report · Todd A Wagner</span>
+<b class="mono">503</b>
+</li>
+<li>
+<span>T&amp;C 4 Portsmouth Avenue Holding LLC</span>
+<b class="mono">540</b>
+</li>
+<li>
+<span>Consumer Report · Todd A Wagner</span>
+<b class="mono">782</b>
+</li>
+</ul>
+</article>
+<article class="quick">
+<h3>Stipulations</h3>
+<ul>
+<li>
+<span>Application</span>
+<b class="mono">2 completed · 0 pending</b>
+</li>
+<li>
+<span>Line of Credit (Uncommitted)</span>
+<b class="mono">1 completed · 0 pending</b>
+</li>
+</ul>
+</article>
+</div>
+</div>
+</section>
+<section class="panel" style="margin-top:18px">
+<div class="section">
+<header class="section-head">
+<div class="title">
+<span class="icon">
+<svg>
+<use href="#file"/>
+</svg>
+</span>
+<div>
+<h2>Alerts, exceptions &amp; application state</h2>
+<p>All application-level activity in the current record.</p>
+</div>
+</div>
+</header>
+<div class="split">
+<article class="stat-card">
+<h3>Alerts &amp; Exceptions</h3>
+<strong class="mono">6 completed · 0 pending</strong>
+<p>Credit Alerts 1 · Policy Exception 4 · Score Overrides 1</p>
+</article>
+<article class="stat-card">
+<h3>Red Flag</h3>
+<strong>0 hits</strong>
+<p>Business Fraud Hits 0 · Business/Consumer Internal Check 0 · Consumer Fraud Hits 0</p>
+</article>
+<article class="stat-card">
+<h3>Associated Applications</h3>
+<strong>No records</strong>
+<p>Open Applications: No records · Archived Applications: No records</p>
+</article>
+<article class="stat-card">
+<h3>Application Hold Status</h3>
+<strong>No records</strong>
+<p>No application holds recorded.</p>
+</article>
+</div>
+</div>
+</section>
+</div>
+<aside class="side">
+<section class="panel side-panel decision">
+<div class="eyebrow">
+<i>
+</i> Decision status</div>
+<h2>Closing Approved</h2>
+<p>RE – Small Business Mortgage</p>
+<div class="lines">
+<div class="line">
+<span>Requested amount</span>
+<b class="mono">$584,400.00</b>
+</div>
+<div class="line">
+<span>Product decision</span>
+<b>Pending</b>
+</div>
+<div class="line">
+<span>Line of Credit</span>
+<b>Closing Approved</b>
+</div>
+<div class="line">
+<span>Currently with</span>
+<b>—</b>
+</div>
+</div>
+<a class="btn" href="relay-decision-workspace.html">Open decision workspace</a>
+</section>
+<section class="panel side-panel">
+<header class="section-head">
+<div>
+<h2>Application actions</h2>
+<p>Record-level actions</p>
+</div>
+</header>
+<ul class="side-list">
+<li>
+<i>
+</i>
+<span>Clone</span>
+<b>›</b>
+</li>
+<li>
+<i>
+</i>
+<span>Archive / Finalize</span>
+<b>›</b>
+</li>
+<li>
+<i>
+</i>
+<span>Add Customer</span>
+<b>›</b>
+</li>
+<li>
+<i>
+</i>
+<span>Edit Relationship</span>
+<b>›</b>
+</li>
+<li>
+<i>
+</i>
+<span>Edit Owner</span>
+<b>›</b>
+</li>
+</ul>
+</section>
+</aside>
+</div>
+</section>
+<section id="customers" class="subpanel">
+<div class="overview">
+<article class="metric emphasis">
+<label>Linked Records</label>
+<b class="mono">2</b>
+<p>Business and individual records</p>
+</article>
+<article class="metric">
+<label>No Activity</label>
+<b class="mono">1</b>
+<p>Secondary individual record</p>
+</article>
+<article class="metric">
+<label>Business TCL</label>
+<b class="mono">$684,400.00</b>
+<p>T&amp;C 4 Portsmouth Avenue Holding LLC</p>
+</article>
+<article class="metric">
+<label>Individual TCL</label>
+<b class="mono">$907,400.00</b>
+<p>Todd A Wagner</p>
+</article>
+</div>
+<article class="record">
+<header class="record-head">
+<div>
+<h2>T&amp;C 4 Portsmouth Avenue Holding LLC</h2>
+<p>Business · Primary linked record</p>
+</div>
+<span class="tag mint">Business</span>
+</header>
+<div class="record-body">
+<div class="fact-grid">
+<div class="fact">
+<span class="k">TIN</span>
+<b class="mono">42-1883764</b>
+</div>
+<div class="fact">
+<span class="k">State of Incorporation</span>
+<b>New Hampshire</b>
+</div>
+<div class="fact">
+<span class="k">TCL</span>
+<b class="mono">$684,400.00</b>
+</div>
+<div class="fact">
+<span class="k">Physical Address</span>
+<b>4 Portsmouth Ave, Exeter, New Hampshire, 03833-2106</b>
+</div>
+</div>
+<div class="subhead">
+<h3>Deposits</h3>
+<button class="action" type="button" onclick="notify('Deposits opened')">View</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Account Type</th>
+<th>Account Number</th>
+<th>Opened</th>
+<th>Balance</th>
+<th>3-Mo Avg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="none" colspan="5">No records</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Owner(s) &amp; Controller</h3>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Ownership %</th>
+<th>ID Type</th>
+<th>ID #</th>
+<th>Issue Date</th>
+<th>Expiration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Todd A Wagner</td>
+<td>Controller</td>
+<td class="mono">55.00%</td>
+<td>Passport</td>
+<td class="mono">234567543</td>
+<td class="mono">09/01/2026</td>
+<td class="mono">09/30/2026</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Facilities</h3>
+<button class="action" type="button" onclick="notify('Add Facilities opened')">Add Facilities</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>TCL Incl</th>
+<th>Product</th>
+<th>Role</th>
+<th>Loan Number</th>
+<th>Net Exposure</th>
+<th>Current Balance</th>
+<th>Maturity</th>
+<th>Review</th>
+<th>Collateral Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✓</td>
+<td>RE – Small Business Mortgage <span class="mono">($584,400.00)</span>
+</td>
+<td>PRIBOR</td>
+<td class="mono">345000123456758544565432134</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>Line of Credit (Uncommitted) <span class="mono">($100,000.00)</span>
+</td>
+<td>PRIBOR</td>
+<td class="mono">543000145676543243456786543</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</article>
+<article class="record">
+<header class="record-head">
+<div>
+<h2>Todd A Wagner</h2>
+<p>Individual · Most complete linked record</p>
+</div>
+<span class="tag blue">Individual</span>
+</header>
+<div class="record-body">
+<div class="fact-grid">
+<div class="fact">
+<span class="k">SSN</span>
+<b class="mono">526-87-5249</b>
+</div>
+<div class="fact">
+<span class="k">State of Residence</span>
+<b>New Hampshire</b>
+</div>
+<div class="fact">
+<span class="k">TCL</span>
+<b class="mono">$907,400.00</b>
+</div>
+<div class="fact">
+<span class="k">Physical Address</span>
+<b>127 Drinkwater Rd, Hampton Falls, New Hampshire, 03844</b>
+</div>
+</div>
+<div class="subhead">
+<h3>Deposits</h3>
+<button class="action" type="button" onclick="notify('Deposits opened')">View</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Type</th>
+<th>Account Number</th>
+<th>Opened</th>
+<th>Balance</th>
+<th>3-Mo Avg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SAV</td>
+<td class="mono">0103000000000337 1515258</td>
+<td class="mono">12/27/2010</td>
+<td class="mono">$0.00</td>
+<td class="mono">$8,406.17</td>
+</tr>
+<tr>
+<td>SAV</td>
+<td class="mono">0103000000000337 1515436</td>
+<td class="mono">12/27/2010</td>
+<td class="mono">$0.00</td>
+<td class="mono">$4,729.46</td>
+</tr>
+<tr>
+<td>DDA</td>
+<td class="mono">0103000000003312768618</td>
+<td class="mono">12/21/2011</td>
+<td class="mono">$1,400.17</td>
+<td class="mono">$593.90</td>
+</tr>
+<tr>
+<td>DDA</td>
+<td class="mono">0103000000003313403680</td>
+<td class="mono">12/19/2012</td>
+<td class="mono">$127,906.57</td>
+<td class="mono">$134,919.40</td>
+</tr>
+<tr>
+<td>DDA</td>
+<td class="mono">0103000000003313567888</td>
+<td class="mono">05/03/2017</td>
+<td class="mono">$23,324.03</td>
+<td class="mono">$4,718.72</td>
+</tr>
+<tr>
+<td>DDA</td>
+<td class="mono">0103000000003313567861</td>
+<td class="mono">05/03/2017</td>
+<td class="mono">$80.40</td>
+<td class="mono">$1,503.44</td>
+</tr>
+<tr>
+<td>DDA</td>
+<td class="mono">0103000000003313567853</td>
+<td class="mono">05/03/2017</td>
+<td class="mono">$204.88</td>
+<td class="mono">$182.71</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Owner(s) &amp; Controller</h3>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Ownership %</th>
+<th>ID Type</th>
+<th>ID #</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="none" colspan="5">No records</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Facilities</h3>
+<button class="action" type="button" onclick="notify('Add Facilities opened')">Add Facilities</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>TCL Incl</th>
+<th>Product</th>
+<th>Role</th>
+<th>Loan Number</th>
+<th>Net Exposure</th>
+<th>Current Balance</th>
+<th>Maturity</th>
+<th>Review</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✓</td>
+<td>Line of Credit (Uncommitted) – CMT</td>
+<td>PRIBOR</td>
+<td class="mono">8808810108123000100000018</td>
+<td class="mono">$130,000.00</td>
+<td class="mono">$0.00</td>
+<td class="mono">03/14/2027</td>
+<td class="mono">03/14/2027</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>Line of Credit (Uncommitted)</td>
+<td>PRIBOR</td>
+<td class="mono">8808810108123000100000026</td>
+<td class="mono">$0.00</td>
+<td class="mono">$84,000.00</td>
+<td>—</td>
+<td class="mono">03/14/2027</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>M/C Bus Rwds</td>
+<td>PRIBOR</td>
+<td class="mono">5530710005649498</td>
+<td class="mono">$35,000.00</td>
+<td class="mono">$26,418.33</td>
+<td>—</td>
+<td class="mono">03/14/2027</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>RE – Small Business Mortgage <span class="mono">($584,400.00)</span>
+</td>
+<td>AFSGUA</td>
+<td class="mono">345000123456758544565432134</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>Line of Credit (Uncommitted) <span class="mono">($100,000.00)</span>
+</td>
+<td>AFSGUA</td>
+<td class="mono">543000145676543243456786543</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>✓</td>
+<td>Line of Credit</td>
+<td>PRIBOR</td>
+<td class="mono">0103000000000000397162952</td>
+<td class="mono">$400,000.00</td>
+<td class="mono">$105,000.00</td>
+<td class="mono">02/17/2048</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</article>
+<article class="record">
+<header class="record-head">
+<div>
+<h2>Todd A Wagner</h2>
+<p>Individual · Secondary linked record</p>
+</div>
+<span class="tag blue">Individual</span>
+</header>
+<div class="record-body">
+<div class="fact-grid">
+<div class="fact">
+<span class="k">SSN</span>
+<b>Not on file</b>
+</div>
+<div class="fact">
+<span class="k">TCL</span>
+<b class="mono">$0.00</b>
+</div>
+<div class="fact" style="grid-column:span 2">
+<span class="k">Physical Address</span>
+<b>4 Portsmouth Ave, Exeter, New Hampshire, 03333</b>
+</div>
+</div>
+<div class="subhead">
+<h3>Deposits</h3>
+<button class="action" type="button" onclick="notify('Deposits opened')">View</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Account Type</th>
+<th>Account Number</th>
+<th>Opened</th>
+<th>Balance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="none" colspan="4">No records</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Owner(s) &amp; Controller</h3>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Ownership %</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="none" colspan="3">No records</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="subhead">
+<h3>Facilities</h3>
+<button class="action" type="button" onclick="notify('Add Facilities opened')">Add Facilities</button>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Product</th>
+<th>Role</th>
+<th>Loan Number</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="none" colspan="3">No records</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</article>
+</section>
+</main>
+<div class="toast" id="toast" role="status">
+</div>
+<script>let timer;function notify(message){const t=document.getElementById('toast');t.textContent=message;t.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('show'),2500)}document.querySelectorAll('[data-panel]').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('[data-panel]').forEach(item=>item.classList.remove('active'));document.querySelectorAll('.subpanel').forEach(item=>item.classList.remove('active'));tab.classList.add('active');document.getElementById(tab.dataset.panel).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}));</script>
 </body>
 </html>

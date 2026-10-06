@@ -6,7 +6,7 @@
 <title>Relay Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700;800&family=Fira+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   html{ color-scheme: light dark; }
   :root{
@@ -56,12 +56,12 @@
   body{
     margin:0;
     background:var(--bg); color:var(--text);
-    font-family:'IBM Plex Sans', 'Segoe UI', sans-serif;
+    font-family:'Fira Sans', 'Segoe UI', Arial, sans-serif;
     font-size:14px; line-height:1.5;
     padding-bottom:60px;
   }
-  h1,h2,h3, .display{ font-family:'Libre Franklin','Arial Narrow',sans-serif; text-wrap:balance; }
-  .mono, .num{ font-family:'IBM Plex Mono','Consolas',monospace; font-variant-numeric:tabular-nums; }
+  h1,h2,h3, .display{ font-family:'Fira Sans','Arial Narrow',sans-serif; text-wrap:balance; }
+  .mono, .num{ font-family:'Fira Mono','Consolas',monospace; font-variant-numeric:tabular-nums; }
   a{ color:var(--accent); }
   button{ font-family:inherit; }
   ::selection{ background:var(--accent-soft); }
@@ -78,7 +78,7 @@
   .brand-logo{ display:flex; align-items:center; flex:none; color:#fff; }
   .brand-logo svg{ display:block; height:22px; width:auto; }
   .brand-divider{ width:1px; height:20px; background:rgba(255,255,255,.32); flex:none; }
-  .brand-product{ font-family:'Libre Franklin',sans-serif; font-weight:800; font-size:16px; letter-spacing:.01em; color:#fff; }
+  .brand-product{ font-family:'Fira Sans',sans-serif; font-weight:800; font-size:16px; letter-spacing:.01em; color:#fff; }
   .footer-brand{ display:flex; align-items:center; gap:8px; }
   .footer-brand svg{ display:block; height:14px; width:auto; color:#fff; opacity:.92; }
   .footer-brand span{ color:#fff; font-weight:600; }
@@ -147,7 +147,7 @@
   .menu-panel{ width:min(1000px, 94vw); max-height:100vh; background:var(--surface); border-radius:0 0 0 14px; display:flex; flex-direction:column; overflow:hidden; transform:translateY(-8px); opacity:0; transition:transform .18s ease, opacity .18s ease; }
   .menu-backdrop.is-open .menu-panel{ transform:translateY(0); opacity:1; }
   .menu-panel-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 22px; border-bottom:1px solid var(--border); flex:none; }
-  .menu-panel-title{ font-family:'Libre Franklin',sans-serif; font-weight:800; font-size:16px; }
+  .menu-panel-title{ font-family:'Fira Sans',sans-serif; font-weight:800; font-size:16px; }
   .menu-panel-actions{ display:flex; align-items:center; gap:18px; }
   .menu-panel-link{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:var(--text-muted); text-decoration:none; }
   .menu-panel-link:hover{ color:var(--text); }
